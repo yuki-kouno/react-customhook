@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { UserCard } from "./components/UserCard";
+import "./App.css";
+import { useAllUsers } from "./components/hooks/useAllUsers";
+
+const user = {
+  id: 1,
+  name: "testユーザー",
+  email: "123@aaa.com",
+  address: "東京都墨田区",
+};
 
 function App() {
+  const { getUsers, userProfile, loading, error } = useAllUsers();
+
+  const onClickFetchUser = () => getUsers();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={onClickFetchUser}>データ取得</button>
+      <br />
+      {error ? (
+        <p>データの取得に失敗しました</p>
+      ) : loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          {userProfile.map((user) => (
+            <UserCard key={user.id} user={user} />
+          ))}
+        </>
+      )}
     </div>
   );
 }
